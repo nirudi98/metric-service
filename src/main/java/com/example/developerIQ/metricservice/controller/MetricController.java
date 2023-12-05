@@ -1,6 +1,7 @@
 package com.example.developerIQ.metricservice.controller;
 
 import com.example.developerIQ.metricservice.common.PreviousProductivity;
+import com.example.developerIQ.metricservice.common.SprintDate;
 import com.example.developerIQ.metricservice.common.productivityRequest.PreviousRequestBody;
 import com.example.developerIQ.metricservice.service.MetricService;
 import com.example.developerIQ.metricservice.service.ValidateService;
@@ -21,55 +22,74 @@ public class MetricController {
     private ValidateService validateService;
 
     @PostMapping(value = "/fetch/all-metrics")
-    public String saveAllMetrics(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
+    public ResponseEntity<String> saveAllMetrics(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+                                 @RequestBody SprintDate sprintDates){
         String token = authorizationHeader;
+        String start = sprintDates.getGivenStartDate();
+        String end = sprintDates.getGivenEndDate();
+
+        String git = sprintDates.getToken();
 
         if(token!= null && token.startsWith("Bearer ")){
             token = token.substring(7);
         }
         if(validateService.validateToken(token)){
-            return metricService.saveAllMetrics();
+            return metricService.saveAllMetrics(start, end, git);
         }
-        return "validation failed";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("validation failed");
     }
 
     @PostMapping(value = "/pulls")
-    public String savePRMetrics(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
+    public ResponseEntity<String> savePRMetrics(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+                                @RequestBody SprintDate sprintDates){
         String token = authorizationHeader;
+        String start = sprintDates.getGivenStartDate();
+        String git = sprintDates.getToken();
+        String end = sprintDates.getGivenEndDate();
 
         if(token!= null && token.startsWith("Bearer ")){
             token = token.substring(7);
         }
         if(validateService.validateToken(token)){
-            return metricService.savePullRequests();
+            return metricService.savePullRequests(start, end, git);
         }
-        return "validation failed";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("validation failed");
     }
 
     @PostMapping(value = "/commits")
-    public String saveCommitsMetrics(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
+    public ResponseEntity<String> saveCommitsMetrics(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+                                     @RequestBody SprintDate sprintDates){
         String token = authorizationHeader;
+
+        String start = sprintDates.getGivenStartDate();
+        String git = sprintDates.getToken();
+        String end = sprintDates.getGivenEndDate();
 
         if(token!= null && token.startsWith("Bearer ")){
             token = token.substring(7);
         }
         if(validateService.validateToken(token)){
-            return metricService.saveCommits();
+            return metricService.saveCommits(start, end, git);
         }
-        return "validation failed";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("validation failed");
     }
 
     @PostMapping(value = "/issues")
-    public String saveIssuesMetrics(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
+    public ResponseEntity<String> saveIssuesMetrics(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+                                    @RequestBody SprintDate sprintDates){
         String token = authorizationHeader;
+
+        String start = sprintDates.getGivenStartDate();
+        String git = sprintDates.getToken();
+        String end = sprintDates.getGivenEndDate();
 
         if(token!= null && token.startsWith("Bearer ")){
             token = token.substring(7);
         }
         if(validateService.validateToken(token)){
-            return metricService.saveIssues();
+            return metricService.saveIssues(start, end, git);
         }
-        return "validation failed";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("validation failed");
     }
 
     @PostMapping(value = "/fetch/previous-sprint-stats")

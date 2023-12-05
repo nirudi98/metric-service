@@ -42,11 +42,19 @@ public class GithubServiceImpl implements GithubService {
     }
 
     @Override
-    public List<PullRequestEntity> fetchPullRequests(){
+    public List<PullRequestEntity> fetchPullRequests(LocalDateTime start, LocalDateTime end, String token_git){
         try {
+            Map<String, LocalDateTime> uriVariables = new HashMap<>();
+            uriVariables.put("since", start);
+            uriVariables.put("until", end);
+
+            String UPDATED_AUTH = AUTHORIZATION + token_git;
+
             ResponseEntity<String> responseEntity = restTemplate.exchange(PULL_REQUESTS, HttpMethod.GET,
-                    new HttpEntity<>(generateHTTPHeaders()), String.class);
-            String responseHeaders = Objects.requireNonNull(responseEntity.getHeaders().get("Link")).toString();
+                    new HttpEntity<>(generateHTTPHeaders(UPDATED_AUTH)), String.class, uriVariables);
+            String responseHeaders = responseEntity.getHeaders().get("Link") != null ?
+                    Objects.requireNonNull(responseEntity.getHeaders().get("Link")).toString() :
+                    null;
 
             // fetch the number of available pages and the link to use
             Map<Integer, String> pagesAndURL = getTotalPagesAndURL(responseHeaders);
@@ -57,7 +65,7 @@ public class GithubServiceImpl implements GithubService {
 
             if(pullRequestsList == null || pullRequestsList.isEmpty()){
                 logger.info("Pull Request list is empty");
-                throw new RuntimeException();
+                return new ArrayList<>();
             }
             logger.info("Number of pull requests fetched from first page " + pullRequestsList.size());
 
@@ -69,7 +77,7 @@ public class GithubServiceImpl implements GithubService {
                 int count = 2;
                 for (String page : url) {
                     ResponseEntity<String> responseEntityPerPage = restTemplate.exchange(page, HttpMethod.GET,
-                            new HttpEntity<>(generateHTTPHeaders()), String.class);
+                            new HttpEntity<>(generateHTTPHeaders(UPDATED_AUTH)), String.class);
                     temporaryPRList = objectMapper.readValue(responseEntityPerPage.getBody(), new TypeReference<List<PullRequestsDTO>>() {});
 
                     logger.info("Temporary PR list size {} in page number {}", temporaryPRList.size(), count);
@@ -86,16 +94,25 @@ public class GithubServiceImpl implements GithubService {
             return githubServiceHelper.formatDatesFetched(finalPRList);
 
         } catch (JsonProcessingException | RuntimeException e) {
+            logger.error("no pull requests fetched");
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public List<CommitEntity> fetchCommits(){
+    public List<CommitEntity> fetchCommits(LocalDateTime start, LocalDateTime end, String token_git){
         try {
+            Map<String, LocalDateTime> uriVariables = new HashMap<>();
+            uriVariables.put("since", start);
+            uriVariables.put("until", end);
+
+            String UPDATED_AUTH = AUTHORIZATION + token_git;
+
             ResponseEntity<String> responseEntity = restTemplate.exchange(COMMITS, HttpMethod.GET,
-                    new HttpEntity<>(generateHTTPHeaders()), String.class);
-            String responseHeaders = Objects.requireNonNull(responseEntity.getHeaders().get("Link")).toString();
+                    new HttpEntity<>(generateHTTPHeaders(UPDATED_AUTH)), String.class, uriVariables);
+            String responseHeaders = responseEntity.getHeaders().get("Link") != null ?
+                    Objects.requireNonNull(responseEntity.getHeaders().get("Link")).toString() :
+                    null;
 
             // fetch the number of available pages and the link to use
             Map<Integer, String> pagesAndURL = getTotalPagesAndURL(responseHeaders);
@@ -106,7 +123,7 @@ public class GithubServiceImpl implements GithubService {
 
             if(commitList == null || commitList.isEmpty()){
                 logger.info("Commit list is empty");
-                throw new RuntimeException();
+                return new ArrayList<>();
             }
             logger.info("Number of commits fetched from first page " + commitList.size());
 
@@ -118,7 +135,7 @@ public class GithubServiceImpl implements GithubService {
                 int count = 2;
                 for (String page : url) {
                     ResponseEntity<String> responseEntityPerPage = restTemplate.exchange(page, HttpMethod.GET,
-                            new HttpEntity<>(generateHTTPHeaders()), String.class);
+                            new HttpEntity<>(generateHTTPHeaders(UPDATED_AUTH)), String.class);
                     temporaryCommitList = objectMapper.readValue(responseEntityPerPage.getBody(), new TypeReference<List<CommitDTO>>() {});
 
                     logger.info("Temporary commit list size {} in page number {}", temporaryCommitList.size(), count);
@@ -135,19 +152,26 @@ public class GithubServiceImpl implements GithubService {
             return githubServiceHelper.formatDatesFetchedForCommits(finalCommitList);
 
         } catch (JsonProcessingException | RuntimeException e) {
+            logger.error("no commits within this period");
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public List<IssueEntity> fetchOpenIssues(){
+    public List<IssueEntity> fetchOpenIssues(LocalDateTime start, LocalDateTime end, String token_git){
         try {
             Map<String, String> uriVariables = new HashMap<>();
             uriVariables.put("state", "open");
+            uriVariables.put("since", start.toString());
+            uriVariables.put("until", end.toString());
+
+            String UPDATED_AUTH = AUTHORIZATION + token_git;
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(ISSUES, HttpMethod.GET,
-                    new HttpEntity<>(generateHTTPHeaders()), String.class, uriVariables);
-            String responseHeaders = Objects.requireNonNull(responseEntity.getHeaders().get("Link")).toString();
+                    new HttpEntity<>(generateHTTPHeaders(UPDATED_AUTH)), String.class, uriVariables);
+            String responseHeaders = responseEntity.getHeaders().get("Link") != null ?
+                    Objects.requireNonNull(responseEntity.getHeaders().get("Link")).toString() :
+                    null;
 
             // fetch the number of available pages and the link to use
             Map<Integer, String> pagesAndURL = getTotalPagesAndURL(responseHeaders);
@@ -158,7 +182,7 @@ public class GithubServiceImpl implements GithubService {
 
             if(openIssueList == null || openIssueList.isEmpty()){
                 logger.info("Open Issue list is empty");
-                throw new RuntimeException();
+                return new ArrayList<>();
             }
             logger.info("Number of open issues fetched from first page " + openIssueList.size());
 
@@ -170,7 +194,7 @@ public class GithubServiceImpl implements GithubService {
                 int count = 2;
                 for (String page : url) {
                     ResponseEntity<String> responseEntityPerPage = restTemplate.exchange(page, HttpMethod.GET,
-                            new HttpEntity<>(generateHTTPHeaders()), String.class);
+                            new HttpEntity<>(generateHTTPHeaders(UPDATED_AUTH)), String.class);
                     temporaryOpenIssueList = objectMapper.readValue(responseEntityPerPage.getBody(), new TypeReference<List<IssueDTO>>() {});
 
                     logger.info("Temporary Open issue list size {} in page number {}", temporaryOpenIssueList.size(), count);
@@ -192,14 +216,20 @@ public class GithubServiceImpl implements GithubService {
     }
 
     @Override
-    public List<IssueEntity> fetchCloseIssues(){
+    public List<IssueEntity> fetchCloseIssues(LocalDateTime start, LocalDateTime end, String token_git){
         try {
             Map<String, String> uriVariables = new HashMap<>();
             uriVariables.put("state", "closed");
+            uriVariables.put("since", start.toString());
+            uriVariables.put("until", end.toString());
+
+            String UPDATED_AUTH = AUTHORIZATION + token_git;
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(ISSUES, HttpMethod.GET,
-                    new HttpEntity<>(generateHTTPHeaders()), String.class, uriVariables);
-            String responseHeaders = Objects.requireNonNull(responseEntity.getHeaders().get("Link")).toString();
+                    new HttpEntity<>(generateHTTPHeaders(UPDATED_AUTH)), String.class, uriVariables);
+            String responseHeaders = responseEntity.getHeaders().get("Link") != null ?
+                    Objects.requireNonNull(responseEntity.getHeaders().get("Link")).toString() :
+                    null;
 
             // fetch the number of available pages and the link to use
             Map<Integer, String> pagesAndURL = getTotalPagesAndURL(responseHeaders);
@@ -210,7 +240,7 @@ public class GithubServiceImpl implements GithubService {
 
             if(closedIssueList == null || closedIssueList.isEmpty()){
                 logger.info("Closed Issue list is empty");
-                throw new RuntimeException();
+                return new ArrayList<>();
             }
             logger.info("Number of closed issues fetched from first page " + closedIssueList.size());
 
@@ -222,7 +252,7 @@ public class GithubServiceImpl implements GithubService {
                 int count = 2;
                 for (String page : url) {
                     ResponseEntity<String> responseEntityPerPage = restTemplate.exchange(page, HttpMethod.GET,
-                            new HttpEntity<>(generateHTTPHeaders()), String.class);
+                            new HttpEntity<>(generateHTTPHeaders(UPDATED_AUTH)), String.class);
                     temporaryClosedIssueList = objectMapper.readValue(responseEntityPerPage.getBody(), new TypeReference<List<IssueDTO>>() {});
 
                     logger.info("Temporary Closed issue list size {} in page number {}", temporaryClosedIssueList.size(), count);
@@ -243,15 +273,18 @@ public class GithubServiceImpl implements GithubService {
         }
     }
 
-    private HttpHeaders generateHTTPHeaders() {
+    private HttpHeaders generateHTTPHeaders(String auth) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", AUTHORIZATION);
+        httpHeaders.set("Authorization", auth);
         httpHeaders.set("Accept", HEADERS);
         httpHeaders.set("X-GitHub-Api-Version", VERSION);
         return httpHeaders;
     }
 
     private Map<Integer, String> getTotalPagesAndURL(String link) {
+        if(link == null) {
+            return new HashMap<>();
+        }
         // Remove square brackets from the input
         String content = link.substring(1, link.length() - 1);
 

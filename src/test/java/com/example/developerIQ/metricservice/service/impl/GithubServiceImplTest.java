@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static com.example.developerIQ.metricservice.constants.TestConstants.MOCK_TOKEN;
 import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -45,6 +46,9 @@ class GithubServiceImplTest {
 
     @Test
     void fetchPullRequests() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.add("Custom-Header", "Custom-Value");
@@ -57,7 +61,8 @@ class GithubServiceImplTest {
                 Mockito.anyString(),
                 Mockito.eq(HttpMethod.GET),
                 Mockito.any(HttpEntity.class),
-                Mockito.eq(String.class)
+                Mockito.eq(String.class),
+                Mockito.anyMap()
         )).thenReturn(mockResponseEntity);
 
         when(githubServiceHelper.fetchAdditionalPageURLList(Mockito.anyMap()))
@@ -65,12 +70,15 @@ class GithubServiceImplTest {
         Mockito.when(githubServiceHelper.formatDatesFetched(Mockito.anyList()))
                 .thenReturn(Collections.singletonList(generatePREntityMock()));
 
-        List<PullRequestEntity> result = githubService.fetchPullRequests();
+        List<PullRequestEntity> result = githubService.fetchPullRequests(start, end, MOCK_TOKEN);
         assertEquals(1, result.size());
     }
 
     @Test
     public void testFetchPullRequests_EmptyList() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.add("Custom-Header", "Custom-Value");
@@ -86,19 +94,25 @@ class GithubServiceImplTest {
                 Mockito.eq(String.class)
         )).thenReturn(mockResponseEntity);
 
-        assertThrows(RuntimeException.class, () -> githubService.fetchPullRequests());
+        assertThrows(RuntimeException.class, () -> githubService.fetchPullRequests(start, end, MOCK_TOKEN));
     }
 
     @Test
     public void testFetchPullRequests_Error() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class)))
                 .thenThrow(new RuntimeException("Simulated error"));
 
-        assertThrows(RuntimeException.class, () -> githubService.fetchPullRequests());
+        assertThrows(RuntimeException.class, () -> githubService.fetchPullRequests(start, end, MOCK_TOKEN));
     }
 
     @Test
     void fetchCommits() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.add("Custom-Header", "Custom-Value");
@@ -111,7 +125,8 @@ class GithubServiceImplTest {
                 Mockito.anyString(),
                 Mockito.eq(HttpMethod.GET),
                 Mockito.any(HttpEntity.class),
-                Mockito.eq(String.class)
+                Mockito.eq(String.class),
+                Mockito.anyMap()
         )).thenReturn(mockResponseEntity);
 
         when(githubServiceHelper.fetchAdditionalPageURLList(Mockito.anyMap()))
@@ -119,12 +134,15 @@ class GithubServiceImplTest {
         Mockito.when(githubServiceHelper.formatDatesFetchedForCommits(Mockito.anyList()))
                 .thenReturn(Collections.singletonList(generateCommitEntityMock()));
 
-        List<CommitEntity> result = githubService.fetchCommits();
+        List<CommitEntity> result = githubService.fetchCommits(start, end, MOCK_TOKEN);
         assertEquals(1, result.size());
     }
 
     @Test
     public void testFetchCommits_EmptyList() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.add("Custom-Header", "Custom-Value");
@@ -137,22 +155,29 @@ class GithubServiceImplTest {
                 Mockito.anyString(),
                 Mockito.eq(HttpMethod.GET),
                 Mockito.any(HttpEntity.class),
-                Mockito.eq(String.class)
+                Mockito.eq(String.class),
+                Mockito.anyMap()
         )).thenReturn(mockResponseEntity);
 
-        assertThrows(RuntimeException.class, () -> githubService.fetchCommits());
+        assertThrows(RuntimeException.class, () -> githubService.fetchCommits(start, end, MOCK_TOKEN));
     }
 
     @Test
     public void testFetchCommits_Error() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class)))
                 .thenThrow(new RuntimeException("Simulated error"));
 
-        assertThrows(RuntimeException.class, () -> githubService.fetchCommits());
+        assertThrows(RuntimeException.class, () -> githubService.fetchCommits(start, end, MOCK_TOKEN));
     }
 
     @Test
     void fetchOpenIssues() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.add("Custom-Header", "Custom-Value");
@@ -174,12 +199,15 @@ class GithubServiceImplTest {
         Mockito.when(githubServiceHelper.formatDatesFetchedForIssues(Mockito.anyList()))
                 .thenReturn(Collections.singletonList((generateIssueEntityMock())));
 
-        List<IssueEntity> result = githubService.fetchOpenIssues();
+        List<IssueEntity> result = githubService.fetchOpenIssues(start, end, MOCK_TOKEN);
         assertEquals(1, result.size());
     }
 
     @Test
     public void testFetchOpenIssue_EmptyList() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.add("Custom-Header", "Custom-Value");
@@ -196,19 +224,25 @@ class GithubServiceImplTest {
                 Mockito.anyMap()
         )).thenReturn(mockResponseEntity);
 
-        assertThrows(RuntimeException.class, () -> githubService.fetchOpenIssues());
+        assertThrows(RuntimeException.class, () -> githubService.fetchOpenIssues(start, end, MOCK_TOKEN));
     }
 
     @Test
     public void testFetchOpenIssues_Error() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class), Mockito.anyMap()))
                 .thenThrow(new RuntimeException("Simulated error"));
 
-        assertThrows(RuntimeException.class, () -> githubService.fetchOpenIssues());
+        assertThrows(RuntimeException.class, () -> githubService.fetchOpenIssues(start, end, MOCK_TOKEN));
     }
 
     @Test
     void fetchCloseIssues() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.add("Custom-Header", "Custom-Value");
@@ -230,12 +264,15 @@ class GithubServiceImplTest {
         Mockito.when(githubServiceHelper.formatDatesFetchedForIssues(Mockito.anyList()))
                 .thenReturn(Collections.singletonList(generateIssueEntityMock()));
 
-        List<IssueEntity> result = githubService.fetchCloseIssues();
+        List<IssueEntity> result = githubService.fetchCloseIssues(start, end, MOCK_TOKEN);
         assertEquals(1, result.size());
     }
 
     @Test
     public void testFetchCloseIssue_EmptyList() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.add("Custom-Header", "Custom-Value");
@@ -252,15 +289,18 @@ class GithubServiceImplTest {
                 Mockito.anyMap()
         )).thenReturn(mockResponseEntity);
 
-        assertThrows(RuntimeException.class, () -> githubService.fetchCloseIssues());
+        assertThrows(RuntimeException.class, () -> githubService.fetchCloseIssues(start, end, MOCK_TOKEN));
     }
 
     @Test
     public void testFetchCloseIssue_Error() {
+        LocalDateTime start = LocalDateTime.of(2023, 12, 1, 12, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 3, 12, 0);
+
         when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class), Mockito.anyMap()))
                 .thenThrow(new RuntimeException("Simulated error"));
 
-        assertThrows(RuntimeException.class, () -> githubService.fetchCloseIssues());
+        assertThrows(RuntimeException.class, () -> githubService.fetchCloseIssues(start, end, MOCK_TOKEN));
     }
 
     private String generateMockResponsePR() {
