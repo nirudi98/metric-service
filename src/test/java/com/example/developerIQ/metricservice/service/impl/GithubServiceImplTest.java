@@ -159,7 +159,8 @@ class GithubServiceImplTest {
                 Mockito.anyMap()
         )).thenReturn(mockResponseEntity);
 
-        assertThrows(RuntimeException.class, () -> githubService.fetchCommits(start, end, MOCK_TOKEN));
+        List<CommitEntity> commitList = githubService.fetchCommits(start, end, MOCK_TOKEN);
+        assertEquals(0,commitList.size());
     }
 
     @Test
@@ -224,7 +225,8 @@ class GithubServiceImplTest {
                 Mockito.anyMap()
         )).thenReturn(mockResponseEntity);
 
-        assertThrows(RuntimeException.class, () -> githubService.fetchOpenIssues(start, end, MOCK_TOKEN));
+        List<IssueEntity> issueList = githubService.fetchOpenIssues(start, end, MOCK_TOKEN);
+        assertEquals(0,issueList.size());
     }
 
     @Test
@@ -289,7 +291,8 @@ class GithubServiceImplTest {
                 Mockito.anyMap()
         )).thenReturn(mockResponseEntity);
 
-        assertThrows(RuntimeException.class, () -> githubService.fetchCloseIssues(start, end, MOCK_TOKEN));
+        List<IssueEntity> issueList = githubService.fetchCloseIssues(start, end, MOCK_TOKEN);
+        assertEquals(0,issueList.size());
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.example.developerIQ.metricservice.integration;
+package com.example.developerIQ.metricservice.IntegrationTest;
 
 import com.example.developerIQ.metricservice.common.PreviousProductivity;
 import com.example.developerIQ.metricservice.common.SprintDate;
@@ -18,17 +18,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.client.ResponseActions;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -38,23 +35,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.example.developerIQ.metricservice.constants.TestConstants.MOCK_TOKEN;
-import static com.example.developerIQ.metricservice.constants.TestConstants.PULL_REQUESTS;
 import static com.example.developerIQ.metricservice.utils.constants.Constants.HEADERS;
 import static com.example.developerIQ.metricservice.utils.constants.Constants.VERSION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class MetricControllerTests {
+public class MetricControllerIntegrationTests {
 
     @Container
     @ServiceConnection

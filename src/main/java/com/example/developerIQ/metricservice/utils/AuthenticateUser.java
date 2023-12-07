@@ -19,6 +19,9 @@ public class AuthenticateUser {
 
     @Value("${auth-service.url}")
     private String auth_service_url;
+
+    @Value("${github.secret}")
+    private String git_secret;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticateUser.class);
 
     @Autowired
@@ -44,7 +47,7 @@ public class AuthenticateUser {
 
     public String decodeString() {
         // Base64 encoded string
-        String encodedString = "Z2hwX3AzZ1o1UHRSZVA3Wnk5MEM5ZzRYWjRlRUlHQkZOYzRLaWNtZQ==";
+        String encodedString = git_secret;
 
         // Decoding the Base64 string
         String decodedString = decodeBase64(encodedString);

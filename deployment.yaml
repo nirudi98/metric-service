@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metric-service
+spec:
+  selector:
+    matchLabels:
+      app: metric-service
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: metric-service
+    spec:
+      containers:
+        - name: metric-service
+          image: niruddya98/metric-service:latest
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: spring_profiles_active
+            value: qa
+          ports:
+            - containerPort: 9194

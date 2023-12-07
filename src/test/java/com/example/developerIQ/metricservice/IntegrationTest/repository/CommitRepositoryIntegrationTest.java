@@ -1,4 +1,4 @@
-package com.example.developerIQ.metricservice.integration.repository;
+package com.example.developerIQ.metricservice.IntegrationTest.repository;
 
 import com.example.developerIQ.metricservice.repository.CommitRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +13,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 @DataMongoTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class CommitRepositoryTest {
+public class CommitRepositoryIntegrationTest {
 
     @Container
     @ServiceConnection
