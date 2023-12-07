@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### property files ###
-*.properties
+application-test.properties
