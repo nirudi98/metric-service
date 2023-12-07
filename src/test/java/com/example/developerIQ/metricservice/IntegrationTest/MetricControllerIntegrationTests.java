@@ -86,6 +86,8 @@ public class MetricControllerIntegrationTests {
     @Autowired
     private Environment environment;
 
+    private String validGitToken;
+
     @Test
     public void testPropertyValues() {
         String propertyValue = environment.getProperty("test.property.name");
@@ -101,12 +103,15 @@ public class MetricControllerIntegrationTests {
                 " 00:00:00.000000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
         LocalDateTime ended = LocalDateTime.parse("2023-10-13" +
                 " 00:00:00.000000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
+
+        validGitToken = authenticateUser.decodeString();
+
+
     }
 
     @Test
     public void testSaveAllMetrics() {
         String validToken = authenticateUser.validateTokenAuthService();
-        String validGitToken = authenticateUser.decodeString();
 
         HttpHeaders headers = new HttpHeaders();
         String finalToken = "Bearer " + validToken;
@@ -133,7 +138,6 @@ public class MetricControllerIntegrationTests {
     @Test
     public void testSavePRMetrics() {
         String validToken = authenticateUser.validateTokenAuthService();
-        String validGitToken = authenticateUser.decodeString();
 
         HttpHeaders headers = new HttpHeaders();
         String finalToken = "Bearer " + validToken;
@@ -160,11 +164,11 @@ public class MetricControllerIntegrationTests {
     @Test
     public void testSaveCommitsMetrics() {
         String validToken = authenticateUser.validateTokenAuthService();
-        String validGitToken = authenticateUser.decodeString();
 
         HttpHeaders headers = new HttpHeaders();
         String finalToken = "Bearer " + validToken;
         headers.set("Authorization", finalToken);
+
 
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-10");
@@ -187,7 +191,7 @@ public class MetricControllerIntegrationTests {
     @Test
     public void testSaveIssueMetrics() {
         String validToken = authenticateUser.validateTokenAuthService();
-        String validGitToken = authenticateUser.decodeString();
+
 
         HttpHeaders headers = new HttpHeaders();
         String finalToken = "Bearer " + validToken;
@@ -213,6 +217,7 @@ public class MetricControllerIntegrationTests {
     @Test
     public void testFetchPreviousSprintStats() {
         String validToken = authenticateUser.validateTokenAuthService();
+
 
         HttpHeaders headers = new HttpHeaders();
         String finalToken = "Bearer " + validToken;

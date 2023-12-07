@@ -20,12 +20,13 @@ public class AuthenticateUser {
     @Value("${auth-service.url}")
     private String auth_service_url;
 
-    @Value("${github.secret}")
-    private String git_secret;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticateUser.class);
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private SecretManagerService secretManagerService;
 
     public String validateTokenAuthService() {
         try{
@@ -47,7 +48,7 @@ public class AuthenticateUser {
 
     public String decodeString() {
         // Base64 encoded string
-        String encodedString = git_secret;
+        String encodedString = secretManagerService.getSecret();
 
         // Decoding the Base64 string
         String decodedString = decodeBase64(encodedString);
