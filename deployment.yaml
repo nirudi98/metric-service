@@ -15,7 +15,7 @@ spec:
       containers:
         - name: metric-service
           image: gcr.io/PROJECT_ID/IMAGE:TAG
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
           - name: spring_profiles_active
             value: qa
