@@ -238,7 +238,7 @@ public class MetricServiceImpl implements MetricService {
             return restTemplate.getForObject(complete_url, PreviousProductivity.class);
 
         } catch(RuntimeException e){
-            logger.error("issue saving failed ", e);
+            logger.error("failed to access productivity service ", e);
             throw new RuntimeException();
         }
     }

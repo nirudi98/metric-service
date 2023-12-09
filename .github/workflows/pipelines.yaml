@@ -11,7 +11,7 @@ env:
   GKE_ZONE: us-central1-c
   DEPLOYMENT_NAME: metric-service
   IMAGE: niruddya98/metric-service
-  TAG: latest
+  TAG: 1.0.0
 
 jobs:
   setup-build-publish-deploy:
