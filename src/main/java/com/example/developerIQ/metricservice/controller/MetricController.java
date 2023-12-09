@@ -104,6 +104,6 @@ public class MetricController {
             return ResponseEntity.ok(metricService.fetchPrevious(body));
         }
         PreviousProductivity previousProductivity = new PreviousProductivity();
-        return ResponseEntity.ok(previousProductivity);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(previousProductivity);
     }
 }
