@@ -235,7 +235,7 @@ public class MetricServiceImpl implements MetricService {
             String param1 = previousRequestBody.getStartedDate();
             String param2 = previousRequestBody.getEndedDate();
             String complete_url = productivity_service_url + PRODUCTIVITY_SERVICE_PREVIOUS_SPRINT_URL + "?start=" + param1 + "&end=" + param2;
-            logger.info("retrieved information from productivity service ");
+            logger.info("retrieved info from productivity service ");
             return restTemplate.getForObject(complete_url, PreviousProductivity.class);
 
         } catch(RuntimeException e){
