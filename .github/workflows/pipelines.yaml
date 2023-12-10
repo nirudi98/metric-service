@@ -53,11 +53,8 @@ jobs:
         with:
           credentials_json: ${{ secrets.GKE_SA_KEY }}
 
-      - name: Set IAM Policy Binding
-        run: |
-          gcloud secrets add-iam-policy-binding git_encryped_token \
-          --member=serviceAccount:gke-sa@developeriq-407504.iam.gserviceaccount.com \
-          --role=roles/secretmanager.secretAccessor
+      - id: 'secrets'
+        uses: 'google-github-actions/get-secretmanager-secrets@v1'
 
       - name: Run Tests
         run: mvn test
