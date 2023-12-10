@@ -57,8 +57,8 @@ jobs:
         uses: 'google-github-actions/get-secretmanager-secrets@v1'
         with:
           secrets: |
-            token: git_encryped_token
-            password: 1
+            token: ${{ secrets.SECRET_NAME }}
+            password: ${{ secrets.SECRET_VERSION_NAME }}
 
       - name: Run Tests
         run: mvn test
