@@ -55,6 +55,10 @@ jobs:
 
       - id: 'secrets'
         uses: 'google-github-actions/get-secretmanager-secrets@v1'
+        with:
+          secrets: |
+            token: git_encryped_token
+            password: 1
 
       - name: Run Tests
         run: mvn test
