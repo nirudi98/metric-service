@@ -25,7 +25,7 @@ public class SecretManagerService {
     public String getSecret() {
         System.out.println("inside get secret ");
         try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
-            String secretName = String.format("projects/%s/secrets/%s/versions/latest", projectId, secretId);
+            String secretName = String.format("projects/%s/secrets/%s/versions/1", projectId, secretId);
             System.out.println("inside try " + projectId + secretId);
 
             AccessSecretVersionRequest request =
