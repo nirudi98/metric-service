@@ -56,7 +56,7 @@ jobs:
       - name: Set IAM Policy Binding
         run: |
           gcloud secrets add-iam-policy-binding git_encryped_token \
-          --member=serviceAccount:sadani.samarasinghe76@gmail.com \
+          --member=serviceAccount:gke-sa@developeriq-407504.iam.gserviceaccount.com \
           --role=roles/secretmanager.versions.access
 
       - name: Run Tests
