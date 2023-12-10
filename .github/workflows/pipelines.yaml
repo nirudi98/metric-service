@@ -57,7 +57,7 @@ jobs:
         run: |
           gcloud secrets add-iam-policy-binding git_encryped_token \
           --member=serviceAccount:gke-sa@developeriq-407504.iam.gserviceaccount.com \
-          --role=roles/secretmanager.versions.access
+          --role=roles/secretmanager.secretAccessor
 
       - name: Run Tests
         run: mvn test
