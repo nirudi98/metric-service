@@ -4,6 +4,8 @@ metadata:
   name: my-backendconfig-metric
 spec:
   timeoutSec: 7200
+  connectionDraining:
+    drainingTimeoutSec: 3600
 
 ---
 
