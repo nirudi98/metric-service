@@ -53,6 +53,17 @@ jobs:
         with:
           credentials_json: ${{ secrets.GKE_SA_KEY }}
 
+      - id: 'get-secret'
+        uses: 'google-github-actions/get-secretmanager-secrets@v1'
+        with:
+          secrets: |-
+              token:${{ secrets.GKE_PROJECT }}/git_encryped_token
+
+      # Example of using the output
+      - id: 'use-secret'
+        run: |
+          echo "${{ steps.get-secret.outputs.token }}"
+
 #      - id: 'secrets'
 #        uses: 'google-github-actions/get-secretmanager-secrets@v1'
 #        with:
