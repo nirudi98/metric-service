@@ -19,7 +19,6 @@
 		<!-- Only unit tests are run by default. -->
 		<skip.integration.tests>true</skip.integration.tests>
 		<skip.unit.tests>false</skip.unit.tests>
-		<skipTests>true</skipTests>
 	</properties>
 	<dependencies>
 		<dependency>
