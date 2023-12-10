@@ -3,7 +3,7 @@ kind: BackendConfig
 metadata:
   name: my-backendconfig-metric
 spec:
-  timeoutSec: 3600
+  timeoutSec: 7200
 
 ---
 
