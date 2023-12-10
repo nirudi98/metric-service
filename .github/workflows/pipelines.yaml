@@ -11,7 +11,7 @@ env:
   GKE_ZONE: us-central1-c
   DEPLOYMENT_NAME: metric-service
   IMAGE: niruddya98/metric-service
-#  TAG: 1.0.1
+
 
 jobs:
   setup-build-publish-deploy:
@@ -35,6 +35,12 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean package -DskipTests
+
+      - name: Run Unit Tests
+        run: mvn test
+
+      - name: Run Integration Tests
+        run: mvn verify -Pintegration-test
 
       - name: Install Google Cloud SDK
         run: |
