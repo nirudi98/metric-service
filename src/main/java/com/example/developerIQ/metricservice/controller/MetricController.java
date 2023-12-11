@@ -28,11 +28,13 @@ public class MetricController {
         String start = sprintDates.getGivenStartDate();
         String end = sprintDates.getGivenEndDate();
 
+        String git = sprintDates.getToken();
+
         if(token!= null && token.startsWith("Bearer ")){
             token = token.substring(7);
         }
         if(validateService.validateToken(token)){
-            return metricService.saveAllMetrics(start, end);
+            return metricService.saveAllMetrics(start, end, git);
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("validation failed");
     }
@@ -42,13 +44,14 @@ public class MetricController {
                                 @RequestBody SprintDate sprintDates){
         String token = authorizationHeader;
         String start = sprintDates.getGivenStartDate();
+        String git = sprintDates.getToken();
         String end = sprintDates.getGivenEndDate();
 
         if(token!= null && token.startsWith("Bearer ")){
             token = token.substring(7);
         }
         if(validateService.validateToken(token)){
-            return metricService.savePullRequests(start, end);
+            return metricService.savePullRequests(start, end, git);
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("validation failed");
     }
@@ -59,13 +62,14 @@ public class MetricController {
         String token = authorizationHeader;
 
         String start = sprintDates.getGivenStartDate();
+        String git = sprintDates.getToken();
         String end = sprintDates.getGivenEndDate();
 
         if(token!= null && token.startsWith("Bearer ")){
             token = token.substring(7);
         }
         if(validateService.validateToken(token)){
-            return metricService.saveCommits(start, end);
+            return metricService.saveCommits(start, end, git);
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("validation failed");
     }
@@ -76,13 +80,14 @@ public class MetricController {
         String token = authorizationHeader;
 
         String start = sprintDates.getGivenStartDate();
+        String git = sprintDates.getToken();
         String end = sprintDates.getGivenEndDate();
 
         if(token!= null && token.startsWith("Bearer ")){
             token = token.substring(7);
         }
         if(validateService.validateToken(token)){
-            return metricService.saveIssues(start, end);
+            return metricService.saveIssues(start, end, git);
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("validation failed");
     }

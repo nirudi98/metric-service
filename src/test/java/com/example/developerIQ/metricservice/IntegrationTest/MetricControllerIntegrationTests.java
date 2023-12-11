@@ -120,6 +120,7 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-01");
         sprintDate.setGivenEndDate("2023-01-10");
+        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 
@@ -145,6 +146,7 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-01");
         sprintDate.setGivenEndDate("2023-01-10");
+        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 
@@ -170,6 +172,7 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-10");
         sprintDate.setGivenEndDate("2023-01-15");
+        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 
@@ -195,6 +198,7 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-10");
         sprintDate.setGivenEndDate("2023-01-15");
+        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 
@@ -221,6 +225,7 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-10");
         sprintDate.setGivenEndDate("2023-01-15");
+        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 
@@ -247,6 +252,7 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-10");
         sprintDate.setGivenEndDate("2023-01-15");
+        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 
@@ -273,6 +279,7 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-10");
         sprintDate.setGivenEndDate("2023-01-15");
+        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 
@@ -298,6 +305,7 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-10");
         sprintDate.setGivenEndDate("2023-01-15");
+        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 

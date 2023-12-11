@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface MetricService {
-    public ResponseEntity<String> saveAllMetrics(String start, String end);
-    public ResponseEntity<String> saveIssues(String start, String end);
-    public ResponseEntity<String> saveCommits(String start, String end);
-    public ResponseEntity<String> savePullRequests(String start, String end);
+    public ResponseEntity<String> saveAllMetrics(String start, String end, String git);
+    public ResponseEntity<String> saveIssues(String start, String end, String git);
+    public ResponseEntity<String> saveCommits(String start, String end, String git);
+    public ResponseEntity<String> savePullRequests(String start, String end, String git);
     public PreviousProductivity fetchPrevious(PreviousRequestBody body);
 }

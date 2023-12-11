@@ -15,5 +15,6 @@ public class SprintDate {
 
     private String givenStartDate;
     private String givenEndDate;
+    private String token;
 
 }

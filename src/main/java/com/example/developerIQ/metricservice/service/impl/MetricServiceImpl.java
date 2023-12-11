@@ -10,7 +10,6 @@ import com.example.developerIQ.metricservice.repository.IssueRepository;
 import com.example.developerIQ.metricservice.repository.PullRequestRepository;
 import com.example.developerIQ.metricservice.service.GithubService;
 import com.example.developerIQ.metricservice.service.MetricService;
-import com.example.developerIQ.metricservice.utils.AuthenticateUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,26 +51,18 @@ public class MetricServiceImpl implements MetricService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private AuthenticateUser authenticateUser;
-
-    private String validGitToken;
-
     @Override
-    public ResponseEntity<String> saveAllMetrics(String start, String end) {
+    public ResponseEntity<String> saveAllMetrics(String start, String end, String token_git) {
         try{
-
-            validGitToken = authenticateUser.decodeString();
-
             LocalDateTime started = LocalDateTime.parse(start + " 00:00:00.000000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             LocalDateTime ended = LocalDateTime.parse(end + " 00:00:00.000000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             // fetch PR details
-            List<PullRequestEntity> pullRequestEntityList = githubService.fetchPullRequests(started, ended, validGitToken);
+            List<PullRequestEntity> pullRequestEntityList = githubService.fetchPullRequests(started, ended, token_git);
             // fetch commit details
-            List<CommitEntity> commitEntityList = githubService.fetchCommits(started, ended, validGitToken);
+            List<CommitEntity> commitEntityList = githubService.fetchCommits(started, ended, token_git);
             // fetch open and closed issue details
-            List<IssueEntity> openIssueEntityList = githubService.fetchOpenIssues(started, ended, validGitToken);
-            List<IssueEntity> closeIssueEntityList = githubService.fetchCloseIssues(started, ended, validGitToken);
+            List<IssueEntity> openIssueEntityList = githubService.fetchOpenIssues(started, ended, token_git);
+            List<IssueEntity> closeIssueEntityList = githubService.fetchCloseIssues(started, ended, token_git);
 
             // saving PR details
             if(pullRequestEntityList == null || pullRequestEntityList.isEmpty()) {
@@ -131,15 +122,13 @@ public class MetricServiceImpl implements MetricService {
     }
 
     @Override
-    public ResponseEntity<String> savePullRequests(String start, String end) {
+    public ResponseEntity<String> savePullRequests(String start, String end, String token_git) {
         try{
             LocalDateTime started = LocalDateTime.parse(start + " 00:00:00.000000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             LocalDateTime ended = LocalDateTime.parse(end + " 00:00:00.000000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
 
-            validGitToken = authenticateUser.decodeString();
-
             // fetch PR details
-            List<PullRequestEntity> pullRequestEntityList = githubService.fetchPullRequests(started, ended, validGitToken);
+            List<PullRequestEntity> pullRequestEntityList = githubService.fetchPullRequests(started, ended, token_git);
 
             if(pullRequestEntityList == null || pullRequestEntityList.isEmpty()) {
                 logger.error("final PR Entity list is null and saving failed");
@@ -163,15 +152,12 @@ public class MetricServiceImpl implements MetricService {
     }
 
     @Override
-    public ResponseEntity<String> saveCommits(String start, String end) {
+    public ResponseEntity<String> saveCommits(String start, String end, String token_git) {
         try{
             LocalDateTime started = LocalDateTime.parse(start + " 00:00:00.000000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             LocalDateTime ended = LocalDateTime.parse(end + " 00:00:00.000000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
-
-            validGitToken = authenticateUser.decodeString();
-
             // fetch Commit details
-            List<CommitEntity> commitEntityList = githubService.fetchCommits(started, ended, validGitToken);
+            List<CommitEntity> commitEntityList = githubService.fetchCommits(started, ended, token_git);
             if(commitEntityList == null || commitEntityList.isEmpty()) {
                 logger.error("final Commit Entity list is null and saving failed");
                 return ResponseEntity.ok("Commits list is empty, nothing saved");
@@ -195,17 +181,15 @@ public class MetricServiceImpl implements MetricService {
     }
 
     @Override
-    public ResponseEntity<String> saveIssues(String start, String end) {
+    public ResponseEntity<String> saveIssues(String start, String end, String token_git) {
         try{
             LocalDateTime started = LocalDateTime.parse(start + " 00:00:00.000000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             LocalDateTime ended = LocalDateTime.parse(end + " 00:00:00.000000", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
 
-            validGitToken = authenticateUser.decodeString();
-
             // fetch Open Issues details
-            List<IssueEntity> openIssueEntityList = githubService.fetchOpenIssues(started, ended, validGitToken);
+            List<IssueEntity> openIssueEntityList = githubService.fetchOpenIssues(started, ended, token_git);
             // fetch Closed Issues details
-            List<IssueEntity> closeIssueEntityList = githubService.fetchCloseIssues(started, ended, validGitToken);
+            List<IssueEntity> closeIssueEntityList = githubService.fetchCloseIssues(started, ended, token_git);
 
             List<IssueEntity> allIssues = new ArrayList<>();
 
