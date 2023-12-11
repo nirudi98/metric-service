@@ -9,12 +9,15 @@ import com.example.developerIQ.metricservice.entity.PullRequestEntity;
 import com.example.developerIQ.metricservice.repository.CommitRepository;
 import com.example.developerIQ.metricservice.repository.IssueRepository;
 import com.example.developerIQ.metricservice.repository.PullRequestRepository;
+import com.example.developerIQ.metricservice.utils.AuthenticateUser;
+import com.example.developerIQ.metricservice.utils.SecretManagerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -54,6 +57,9 @@ class MetricServiceImplTest {
     @InjectMocks
     private MetricServiceImpl metricService;
 
+    @Mock
+    private AuthenticateUser authenticateUser;
+
     @Test
     void saveAllMetrics() {
         String start = "2023-12-01";
@@ -78,6 +84,7 @@ class MetricServiceImplTest {
         when(githubService.fetchCommits(any(), any(), anyString())).thenReturn(mockCommitEntityList);
         when(githubService.fetchOpenIssues(any(), any(), anyString())).thenReturn(mockOpenIssueEntityList);
         when(githubService.fetchCloseIssues(any(), any(), anyString())).thenReturn(mockCloseIssueEntityList);
+        when(authenticateUser.decodeString()).thenReturn(MOCK_TOKEN);
 
         ResponseEntity<String> result = metricService.saveAllMetrics(start, end);
 
@@ -114,6 +121,8 @@ class MetricServiceImplTest {
         mockPullRequests.add(two);
 
         when(githubService.fetchPullRequests(any(), any(), anyString())).thenReturn(mockPullRequests);
+        when(authenticateUser.decodeString()).thenReturn(MOCK_TOKEN);
+
         ResponseEntity<String> result = metricService.savePullRequests(start, end);
 
         assertEquals("Pull Requests Saved Successfully", result.getBody());
@@ -127,6 +136,7 @@ class MetricServiceImplTest {
 
         List<PullRequestEntity> mockList = null;
         when(githubService.fetchPullRequests(any(), any(), anyString())).thenReturn(mockList);
+        when(authenticateUser.decodeString()).thenReturn(MOCK_TOKEN);
 
         ResponseEntity<String> response = metricService.savePullRequests(start, end);
         assertEquals("PR list is empty, nothing saved", response.getBody());
@@ -146,6 +156,8 @@ class MetricServiceImplTest {
         mockCommits.add(two);
 
         when(githubService.fetchCommits(any(), any(), anyString())).thenReturn(mockCommits);
+        when(authenticateUser.decodeString()).thenReturn(MOCK_TOKEN);
+
         ResponseEntity<String> result = metricService.saveCommits(start, end);
 
         assertEquals("Commits Saved Successfully", result.getBody());
@@ -159,6 +171,7 @@ class MetricServiceImplTest {
 
         List<CommitEntity> mockList = null;
         when(githubService.fetchCommits(any(), any(), anyString())).thenReturn(mockList);
+        when(authenticateUser.decodeString()).thenReturn(MOCK_TOKEN);
 
         ResponseEntity<String> response = metricService.saveCommits(start, end);
         assertEquals("Commits list is empty, nothing saved", response.getBody());
@@ -185,6 +198,8 @@ class MetricServiceImplTest {
 
         when(githubService.fetchOpenIssues(any(), any(), anyString())).thenReturn(mockCommitsOpen);
         when(githubService.fetchCloseIssues(any(), any(), anyString())).thenReturn(mockCommitsClose);
+        when(authenticateUser.decodeString()).thenReturn(MOCK_TOKEN);
+
         ResponseEntity<String> result = metricService.saveIssues(start, end);
 
         assertEquals("Issues Saved Successfully", result.getBody());
@@ -200,6 +215,7 @@ class MetricServiceImplTest {
         List<IssueEntity> mockListClose = null;
         when(githubService.fetchOpenIssues(any(), any(), anyString())).thenReturn(mockListOpen);
         when(githubService.fetchCloseIssues(any(), any(), anyString())).thenReturn(mockListClose);
+        when(authenticateUser.decodeString()).thenReturn(MOCK_TOKEN);
 
         ResponseEntity<String> response = metricService.saveIssues(start, end);
         assertEquals("Issue list is empty, nothing saved", response.getBody());
