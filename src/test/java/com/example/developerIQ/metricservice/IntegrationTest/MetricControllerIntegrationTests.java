@@ -120,7 +120,6 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-01");
         sprintDate.setGivenEndDate("2023-01-10");
-        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 
@@ -136,6 +135,31 @@ public class MetricControllerIntegrationTests {
     }
 
     @Test
+    public void testSaveAllMetrics_Exception() {
+        String invalidToken = "123";
+
+        HttpHeaders headers = new HttpHeaders();
+        String finalToken = "Bearer " + invalidToken;
+        headers.set("Authorization", finalToken);
+
+        SprintDate sprintDate = new SprintDate();
+        sprintDate.setGivenStartDate("2023-01-01");
+        sprintDate.setGivenEndDate("2023-01-10");
+
+        HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
+
+
+        ResponseEntity<String> response = restTemplate.exchange("/metrics/fetch/all-metrics",
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
     public void testSavePRMetrics() {
         String validToken = authenticateUser.validateTokenAuthService();
 
@@ -146,7 +170,6 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-10");
         sprintDate.setGivenEndDate("2023-01-15");
-        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 
@@ -162,6 +185,31 @@ public class MetricControllerIntegrationTests {
     }
 
     @Test
+    public void testSavePRMetrics_Exception() {
+        String invalidToken = "123";
+
+        HttpHeaders headers = new HttpHeaders();
+        String finalToken = "Bearer " + invalidToken;
+        headers.set("Authorization", finalToken);
+
+        SprintDate sprintDate = new SprintDate();
+        sprintDate.setGivenStartDate("2023-01-10");
+        sprintDate.setGivenEndDate("2023-01-15");
+
+        HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
+
+
+        ResponseEntity<String> response = restTemplate.exchange("/metrics/pulls",
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
     public void testSaveCommitsMetrics() {
         String validToken = authenticateUser.validateTokenAuthService();
 
@@ -173,7 +221,6 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-10");
         sprintDate.setGivenEndDate("2023-01-15");
-        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 
@@ -189,6 +236,32 @@ public class MetricControllerIntegrationTests {
     }
 
     @Test
+    public void testSaveCommitsMetrics_Exception() {
+        String invalidToken = "123";
+
+        HttpHeaders headers = new HttpHeaders();
+        String finalToken = "Bearer " + invalidToken;
+        headers.set("Authorization", finalToken);
+
+
+        SprintDate sprintDate = new SprintDate();
+        sprintDate.setGivenStartDate("2023-01-10");
+        sprintDate.setGivenEndDate("2023-01-15");
+
+        HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
+
+
+        ResponseEntity<String> response = restTemplate.exchange("/metrics/commits",
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
     public void testSaveIssueMetrics() {
         String validToken = authenticateUser.validateTokenAuthService();
 
@@ -200,7 +273,6 @@ public class MetricControllerIntegrationTests {
         SprintDate sprintDate = new SprintDate();
         sprintDate.setGivenStartDate("2023-01-10");
         sprintDate.setGivenEndDate("2023-01-15");
-        sprintDate.setToken(validGitToken);
 
         HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
 
@@ -211,6 +283,31 @@ public class MetricControllerIntegrationTests {
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
+    public void testSaveIssueMetrics_Exception() {
+        String invalidToken = "123";
+
+
+        HttpHeaders headers = new HttpHeaders();
+        String finalToken = "Bearer " + invalidToken;
+        headers.set("Authorization", finalToken);
+
+        SprintDate sprintDate = new SprintDate();
+        sprintDate.setGivenStartDate("2023-01-10");
+        sprintDate.setGivenEndDate("2023-01-15");
+
+        HttpEntity<SprintDate> requestEntity = new HttpEntity<>(sprintDate,headers);
+
+        ResponseEntity<String> response = restTemplate.exchange("/metrics/issues",
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
     }
 
@@ -237,6 +334,32 @@ public class MetricControllerIntegrationTests {
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
+    public void testFetchPreviousSprintStats_Exception() {
+        String invalidToken = "123";
+
+
+        HttpHeaders headers = new HttpHeaders();
+        String finalToken = "Bearer " + invalidToken;
+        headers.set("Authorization", finalToken);
+
+        PreviousRequestBody previousRequestBody = new PreviousRequestBody();
+        previousRequestBody.setStartedDate("2023-01-10");
+        previousRequestBody.setEndedDate("2023-01-15");
+
+        HttpEntity<PreviousRequestBody> requestEntity = new HttpEntity<>(previousRequestBody,headers);
+
+
+        ResponseEntity<PreviousProductivity> response = restTemplate.exchange("/metrics/fetch/previous-sprint-stats",
+                HttpMethod.POST,
+                requestEntity,
+                PreviousProductivity.class
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
     }
 
@@ -323,225 +446,5 @@ public class MetricControllerIntegrationTests {
                 " \"state\": \"open\", \"title\": \"Create blank.yml\",\"user\": {\"login\": \"CW3-Root\",\"type\": \"User\"," +
                 "\"site_admin\": false},\"created_at\": \"2023-10-30T09:35:16Z\",\"closed_at\": null,\"merged_at\": null}]";
     }
-
-
-//    @Test
-//    public void testRetrieveProductivityOverview_exception() {
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        String finalToken = "1234";
-//        headers.set("Authorization", finalToken);
-//
-//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<Productivity> response = restTemplate.exchange("/productivity/display/overview?username=test&startDate=2023-01-01&endDate=2023-01-31",
-//                HttpMethod.GET,
-//                requestEntity,
-//                Productivity.class
-//        );
-//
-//        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-//    }
-//
-//    @Test
-//    public void testRetrievePROverview() {
-//        String validToken = authenticateUser.validateTokenAuthService();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        String finalToken = "Bearer " + validToken;
-//        headers.set("Authorization", finalToken);
-//
-//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<PullRequests> response = restTemplate.exchange("/productivity/display/pull-request-productivity?username=test&startDate=2023-01-01&endDate=2023-01-31",
-//                HttpMethod.GET,
-//                requestEntity,
-//                PullRequests.class
-//        );
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertNotNull(response.getBody());
-//    }
-//
-//    @Test
-//    public void testRetrievePROverview_exception() {
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        String finalToken = "invalid_token";
-//        headers.set("Authorization", finalToken);
-//
-//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<PullRequests> response = restTemplate.exchange("/productivity/display/pull-request-productivity?username=test&startDate=2023-01-01&endDate=2023-01-31",
-//                HttpMethod.GET,
-//                requestEntity,
-//                PullRequests.class
-//        );
-//
-//        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-//    }
-//
-//    @Test
-//    public void testRetrievePRStats() {
-//        String validToken = authenticateUser.validateTokenAuthService();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        String finalToken = "Bearer " + validToken;
-//        headers.set("Authorization", finalToken);
-//
-//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<PullRequests> response = restTemplate.exchange("/productivity/display/pull-request-productivity/stats" +
-//                        "?username=test&startDate=2023-01-01&endDate=2023-01-31",
-//                HttpMethod.GET,
-//                requestEntity,
-//                PullRequests.class
-//        );
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertNotNull(response.getBody());
-//    }
-//
-//    @Test
-//    public void testRetrievePRStats_exception() {
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        String finalToken = "invalid_token";
-//        headers.set("Authorization", finalToken);
-//
-//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<PullRequests> response = restTemplate.exchange("/productivity/display/pull-request-productivity/stats" +
-//                        "?username=test&startDate=2023-01-01&endDate=2023-01-31",
-//                HttpMethod.GET,
-//                requestEntity,
-//                PullRequests.class
-//        );
-//
-//        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-//    }
-//
-//    @Test
-//    public void testRetrieveIssuesOverview() {
-//        String validToken = authenticateUser.validateTokenAuthService();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        String finalToken = "Bearer " + validToken;
-//        headers.set("Authorization", finalToken);
-//
-//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<IssuesSprint> response = restTemplate.exchange("/productivity/display/issues-productivity" +
-//                        "?username=test&startDate=2023-01-01&endDate=2023-01-31",
-//                HttpMethod.GET,
-//                requestEntity,
-//                IssuesSprint.class
-//        );
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertNotNull(response.getBody());
-//        assertEquals("issue one", Objects.requireNonNull(response.getBody()).getIssueInformationList().stream().toList().get(0).getTitle());
-//
-//    }
-//
-//    @Test
-//    public void testRetrieveIssuesOverview_exception() {
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        String finalToken = "invalid_token";
-//        headers.set("Authorization", finalToken);
-//
-//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<IssuesSprint> response = restTemplate.exchange("/productivity/display/issues-productivity" +
-//                        "?username=test&startDate=2023-01-01&endDate=2023-01-31",
-//                HttpMethod.GET,
-//                requestEntity,
-//                IssuesSprint.class
-//        );
-//
-//        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-//    }
-//
-//    @Test
-//    public void testRetrieveIssuesStats() {
-//        String validToken = authenticateUser.validateTokenAuthService();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        String finalToken = "Bearer " + validToken;
-//        headers.set("Authorization", finalToken);
-//
-//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<IssueStatics> response = restTemplate.exchange("/productivity/display/issues-productivity/stats" +
-//                        "?username=test&startDate=2023-01-01&endDate=2023-01-31",
-//                HttpMethod.GET,
-//                requestEntity,
-//                IssueStatics.class
-//        );
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertNotNull(response.getBody());
-//        assertEquals(1, Objects.requireNonNull(response.getBody()).getAll_issue_count());
-//    }
-//
-//    @Test
-//    public void testRetrieveIssuesStats_exception() {
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        String finalToken = "invalid_token";
-//        headers.set("Authorization", finalToken);
-//
-//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<IssueStatics> response = restTemplate.exchange("/productivity/display/issues-productivity/stats" +
-//                        "?username=test&startDate=2023-01-01&endDate=2023-01-31",
-//                HttpMethod.GET,
-//                requestEntity,
-//                IssueStatics.class
-//        );
-//
-//        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-//    }
-//
-//    @Test
-//    public void testRetrieveCommitsOverview() {
-//        String validToken = authenticateUser.validateTokenAuthService();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        String finalToken = "Bearer " + validToken;
-//        headers.set("Authorization", finalToken);
-//
-//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<Commits> response = restTemplate.exchange("/productivity/display/commits-productivity" +
-//                        "?username=test&startDate=2023-01-01&endDate=2023-01-31",
-//                HttpMethod.GET,
-//                requestEntity,
-//                Commits.class
-//        );
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertNotNull(response.getBody());
-//    }
-//
-//    @Test
-//    public void testRetrieveCommitsOverview_exception() {
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        String finalToken = "invalid_token";
-//        headers.set("Authorization", finalToken);
-//
-//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<Commits> response = restTemplate.exchange("/productivity/display/commits-productivity" +
-//                        "?username=test&startDate=2023-01-01&endDate=2023-01-31",
-//                HttpMethod.GET,
-//                requestEntity,
-//                Commits.class
-//        );
-//
-//        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-//    }
 
 }
